@@ -1,7 +1,7 @@
 /*
  * jsPlumb
  * 
- * Title:jsPlumb 1.3.16
+ * Title:jsPlumb 1.3.16 - Custom (Marcos Fedato)
  * 
  * Provides a way to visually connect elements on an HTML page, using either SVG, Canvas
  * elements, or VML.  
@@ -58,10 +58,12 @@
 				
 			// look for child elements that have endpoints and register them against this draggable.
 			var _oneLevel = function(p, startOffset) {
-                if (p) {											
-                    for (var i = 0; i < p.childNodes.length; i++) {
-                        if (p.childNodes[i].nodeType != 3) {
-                            var cEl = jpcl.getElementObject(p.childNodes[i]),
+                if (p) {
+					var descendants = new Array();
+					_allDescendants(p, descendants);
+                    for (var i = 0; i < descendants.length; i++) {
+                        if (descendants[i].nodeType != 3) {
+                            var cEl = jpcl.getElementObject(descendants[i]),
                                 cid = _currentInstance.getId(cEl, null, true);
                             if (cid && _elementsWithEndpoints[cid] && _elementsWithEndpoints[cid] > 0) {
                                 var cOff = jpcl.getOffset(cEl);
@@ -73,7 +75,7 @@
                                     }
                                 };
                             }
-                            _oneLevel(p.childNodes[i]);
+                            _oneLevel(descendants[i]);
                         }	
                     }
                 }
@@ -159,6 +161,15 @@
 			_delements = {};
 			_elementsWithEndpoints = {};
 		};
+		
+		this._allDescendants = function (node, descendants) {
+			for (var i = 0; i < node.childNodes.length; i++) 
+			{
+			  var child = node.childNodes[i];
+			  allDescendants(child, descendants);
+			  descendants.push(chid);
+			}
+		}
 		
 	};
         
